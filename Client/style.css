@@ -245,7 +245,6 @@ body {
 }
 
 .message-box::before {
-  content: "✔";
   display: block;
   font-size: 22px;
   margin-bottom: 8px;
@@ -254,11 +253,104 @@ body {
 /* =====================================================
    FOOTER
 ===================================================== */
+
+
 footer {
-  background: #111827;
+  background-color: #111827; /* Matches your Navbar Dark */
   color: #e5e7eb;
-  padding: 40px 0 16px;
-  margin-top: 60px;
+  padding-top: 70px;
+  padding-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+  /* Top blue Accent Border for Pop */
+  /* border-top: 4px solid var(--primary); */
+  position: relative;
+}
+
+/* --- Headings --- */
+footer h4 {
+  color: #ffffff;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+}
+
+footer h5 {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+/* --- Links List --- */
+.footer-links li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: #9ca3af; /* Light Gray */
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary); /* Blue on hover */
+  padding-left: 5px;
+}
+
+/* --- Contact Icons --- */
+.text-accent {
+  color: #fff /* Use your green accent */
+}
+
+/* --- Social Icons (Clean Circle) --- */
+.social-icons a.btn-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 50%;
+  margin-right: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-icons a.btn-social:hover {
+  background: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* --- Copyright Bar --- */
+.copyright-bar {
+  background: #0b111f; /* Slightly darker */
+  margin-top: 50px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.copyright-bar p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  footer {
+    padding-top: 50px;
+  }
+  .footer-brand, .footer-contact {
+    margin-bottom: 2rem;
+  }
+  .social-icons a.btn-social {
+    width: 35px;
+    height: 35px;
+    margin-right: 8px;
+  }
 }
 /* =====================================================
    COMPACT CARD – BUTTON ALWAYS VISIBLE
