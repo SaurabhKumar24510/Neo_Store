@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signup - NeoStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="signupstyle.css">
+</head>
+<body class="p-5">
+
+  <div id="message-box" class="message-box d-none"></div>
+
+  <h2>Signup</h2>
+
+  <!-- Signup Form -->
+  <form id="signupForm" class="w-50">
+    <input type="text" class="form-control mb-3" placeholder="Name" id="name" required />
+    <input type="email" class="form-control mb-3" placeholder="Email" id="email" required />
+    <input type="text" class="form-control mb-3" placeholder="Phone" id="phone" required />
+    <input type="password" class="form-control mb-3" placeholder="Password" id="password" required />
+    <button class="btn btn-primary" type="submit">Signup</button>
+  </form>
+
+  <!-- Login Redirect -->
+  <p class="mt-3">Already have an account? <a href="login.html">Login</a></p>
+
+  <!-- Signup Script -->
+  <script>
+    // ✅ Centered Message Function
+    function showMessage(message, callback = null) {
+      const msgBox = document.getElementById("message-box");
+      msgBox.textContent = message;
+      msgBox.classList.remove("d-none");
+      msgBox.classList.add("show");
+
+      setTimeout(() => {
+        msgBox.classList.remove("show");
+        msgBox.classList.add("d-none");
+        if (callback) callback();
+      }, 2500);
+    }
+
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const user = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        password: document.getElementById("password").value.trim(),
+      };
+
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+        });
+
+        const contentType = res.headers.get("content-type");
+        let data;
+
+        if (contentType && contentType.includes("application/json")) {
+          data = await res.json();
+        } else {
+          throw new Error("Invalid server response format (HTML returned instead of JSON)");
+        }
+
+        if (res.ok) {
+          showMessage("Signup successful ✅ Now you can login...", () => {
+            window.location.href = "login.html";
+          });
+        } else {
+          showMessage(data.message || "Signup failed ❌");
+        }
+      } catch (error) {
+        console.error("Signup Error:", error);
+        showMessage("⚠️ Server error. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+/* =====================================================
+   CART PAGE - PROFESSIONAL DESIGN (FIXED UPI) 💼
+===================================================== */
+:root {
+  /* Professional Color Palette */
+  --primary: #0d6efd;
+  --accent: #22c55e;
+  --dark: #1e293b;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --border-light: #e2e8f0;
+  --danger: #ef4444;
+
+  /* Professional Background - Clean & Modern */
+  --bg-main: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  
+  /* Spacing & Typography */
+  --space-xs: clamp(0.5rem, 1vw, 0.75rem);
+  --space-sm: clamp(0.75rem, 1.5vw, 1rem);
+  --space-md: clamp(1rem, 2vw, 1.25rem);
+  --space-lg: clamp(1.25rem, 2.5vw, 1.5rem);
+  --space-xl: clamp(1.5rem, 3vw, 2rem);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+
+  --font-size-xs: clamp(0.7rem, 1.2vw, 0.8rem);
+  --font-size-sm: clamp(0.8rem, 1.4vw, 0.875rem);
+  --font-size-base: clamp(0.875rem, 1.5vw, 1rem);
+  --font-size-lg: clamp(1rem, 1.75vw, 1.125rem);
+  --font-size-xl: clamp(1.125rem, 2vw, 1.25rem);
+
+  --transition: all 0.25s ease;
+}
+
+/* =====================================================
+   GLOBAL & BOOTSTRAP OVERRIDES
+===================================================== */
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+/* Container */
+.container {
+  max-width: 1200px !important;
+  padding: 0 var(--space-md) !important;
+}
+
+/* =====================================================
+   MAIN TITLE
+===================================================== */
+h2 {
+  font-size: var(--font-size-xl) !important;
+  font-weight: 700 !important;
+  color: var(--dark) !important;
+  text-align: center;
+  margin: var(--space-xl) 0 var(--space-lg) 0 !important;
+  position: relative;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* =====================================================
+   CART TABLE - OPTIMIZED PRODUCT SIZE
+===================================================== */
+#cart-container table {
+  background: var(--bg-secondary) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-lg) !important;
+  border: 1px solid var(--border-light) !important;
+  margin-bottom: var(--space-xl) !important;
+}
+
+#cart-container thead.table-dark {
+  background: var(--dark) !important;
+}
+
+#cart-container th {
+  font-weight: 700 !important;
+  font-size: var(--font-size-sm) !important;
+  padding: var(--space-md) !important;
+  color: white !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#cart-container td {
+  padding: var(--space-md) !important;
+  vertical-align: middle !important;
+  border-color: var(--border-light) !important;
+}
+
+/* ✅ SMALLER PRODUCT IMAGES - 50x50px */
+#cart-container img {
+  width: 50px !important;
+  height: 50px !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Quantity Controls - Compact */
+#cart-container .btn-sm {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  font-size: var(--font-size-xs) !important;
+  font-weight: 700 !important;
+  padding: 0 !important;
+  border: 2px solid var(--border-light) !important;
+  margin: 0 4px !important;
+}
+
+#cart-container .btn-outline-secondary:hover {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: white !important;
+}
+
+#cart-container .btn-danger {
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  font-size: var(--font-size-xs) !important;
+  font-weight: 700 !important;
+}
+
+/* Total */
+#cart-container h4 {
+  font-size: var(--font-size-xl) !important;
+  font-weight: 700 !important;
+  color: var(--accent) !important;
+  margin: var(--space-lg) var(--space-md) 0 0 !important;
+}
+
+/* Action Buttons */
+.btn-success, .btn-secondary {
+  padding: var(--space-sm) var(--space-lg) !important;
+  font-size: var(--font-size-base) !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-md) !important;
+  border: none !important;
+  min-width: 160px;
+}
+
+.btn-success {
+  background: var(--accent) !important;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-success:hover {
+  background: #16a34a !important;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary) !important;
+  color: var(--text-main) !important;
+  border: 2px solid var(--border-light) !important;
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+/* =====================================================
+   CHECKOUT MODAL - PROFESSIONAL
+===================================================== */
+.modal-content {
+  border-radius: var(--radius-lg) !important;
+  border: none !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.modal-header {
+  background: var(--dark) !important;
+  border-bottom: none !important;
+  padding: var(--space-lg) !important;
+}
+
+.checkout-step h5 {
+  font-size: var(--font-size-lg) !important;
+  font-weight: 700 !important;
+  color: var(--dark) !important;
+  margin-bottom: var(--space-md) !important;
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--accent);
+}
+
+/* Form Styling */
+.form-label {
+  font-weight: 600 !important;
+  color: var(--text-main) !important;
+  margin-bottom: var(--space-xs) !important;
+}
+
+.form-control, .form-select {
+  border: 2px solid var(--border-light) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-sm) !important;
+  transition: var(--transition);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+}
+
+/* Payment Options */
+.payment-option {
+  margin-bottom: var(--space-md) !important;
+}
+
+/* =====================================================
+   UPI APPS - FIXED WHITE BACKGROUND ✨
+===================================================== */
+.upi-app {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-sm) !important;
+  border: 2px solid var(--border-light) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-sm) !important;
+  background: var(--bg-secondary) !important; /* White background */
+  cursor: pointer !important;
+  transition: var(--transition);
+  flex: 1;
+  min-width: 130px;
+}
+
+.upi-app img {
+  width: 40px !important;
+  height: 40px !important;
+  object-fit: contain !important;
+}
+
+.upi-app span {
+  font-weight: 600 !important;
+  font-size: var(--font-size-sm) !important;
+  color: var(--text-main) !important;
+}
+
+.upi-app:hover {
+  border-color: var(--primary) !important;
+  background: var(--bg-primary) !important; /* Light gray hover */
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.upi-app.selected {
+  border-color: var(--accent) !important;
+  background: #fefefe !important; /* Pure white background */
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.upi-app.selected span {
+  color: var(--text-main) !important; /* Dark text for contrast */
+  font-weight: 700 !important;
+}
+
+/* Keep UPI images normal on select */
+.upi-app.selected img {
+  filter: none !important; /* Remove green tint */
+}
+
+/* Order Summary */
+.product-img-sm {
+  width: 45px !important;
+  height: 45px !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 768px) {
+  .container { padding: 0 var(--space-sm) !important; }
+  
+  .upi-app { 
+    min-width: 110px !important;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  #cart-container .btn-sm,
+  #cart-container .btn-danger {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 { font-size: var(--font-size-lg) !important; }
+  .btn { width: 100% !important; margin-bottom: var(--space-sm) !important; }
+  #cart-container img { width: 45px !important; height: 45px !important; }
+}
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#cart-container table {
+  animation: fadeInUp 0.4s ease;
+}

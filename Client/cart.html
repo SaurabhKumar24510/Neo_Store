@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart - NeoStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="cartstyle.css">
+  <!-- <style>
+    .product-img-sm {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .payment-option { margin-bottom: 10px; }
+    .upi-options, .netbanking-options, .card-options {
+      display: none;
+      margin-left: 20px;
+      margin-top: 10px;
+    }
+
+    /* 🟦 UPI Styles */
+    .upi-app {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 8px 12px;
+      background: #fff;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .upi-app img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+    .upi-app:hover {
+      background: #f8f9fa;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .upi-app.selected {
+      border: 2px solid #007bff;
+      background-color: #e6f0ff;
+    }
+  </style> -->
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">🛒 Your Cart</h2>
+    <div id="cart-container" class="table-responsive"></div>
+
+    <div class="text-center mt-4">
+      <a href="index.html" class="btn btn-secondary me-2">Continue Shopping</a>
+      <button id="placeOrderBtn" class="btn btn-success">Place Order</button>
+    </div>
+  </div>
+
+  <!-- 🟩 Checkout Modal -->
+  <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title">Checkout Process</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          <!-- STEP 1 -->
+          <div id="step1" class="checkout-step">
+            <h5 class="mb-3">1️⃣ Shipping Address</h5>
+            <form id="addressForm">
+              <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="fullName" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Address</label>
+                <textarea id="address" class="form-control" rows="2" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">City</label>
+                <input type="text" id="city" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Pincode</label>
+                <input type="text" id="pincode" class="form-control" required pattern="[0-9]{6}">
+              </div>
+              <div class="text-end">
+                <button type="button" class="btn btn-dark" onclick="goToStep(2)">Next ➡️</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- STEP 2 -->
+          <div id="step2" class="checkout-step d-none">
+            <h5 class="mb-3">2️⃣ Order Summary</h5>
+            <div id="orderSummary"></div>
+            <div class="text-end mt-3">
+              <button class="btn btn-secondary me-2" onclick="goToStep(1)">⬅️ Back</button>
+              <button class="btn btn-dark" onclick="goToStep(3)">Next ➡️</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div id="step3" class="checkout-step d-none">
+            <h5 class="mb-3">3️⃣ Payment Method</h5>
+
+            <!-- Cash on Delivery -->
+            <div class="form-check payment-option">
+              <input class="form-check-input" type="radio" name="payment" id="cod" checked onclick="showPaymentOption('none')">
+              <label class="form-check-label" for="cod">Cash on Delivery</label>
+            </div>
+
+            <!-- Credit/Debit/ATM Card -->
+            <div class="form-check payment-option">
+              <input class="form-check-input" type="radio" name="payment" id="card" onclick="showPaymentOption('card')">
+              <label class="form-check-label" for="card">Credit / Debit / ATM Card</label>
+            </div>
+            <div class="card-options">
+              <input type="text" class="form-control mb-2" placeholder="Card Number">
+              <div class="row">
+                <div class="col"><input type="text" class="form-control mb-2" placeholder="MM/YY"></div>
+                <div class="col"><input type="text" class="form-control mb-2" placeholder="CVV"></div>
+              </div>
+              <input type="text" class="form-control mb-2" placeholder="Card Holder Name">
+            </div>
+
+            <!-- Netbanking -->
+            <div class="form-check payment-option">
+              <input class="form-check-input" type="radio" name="payment" id="netbanking" onclick="showPaymentOption('netbanking')">
+              <label class="form-check-label" for="netbanking">Net Banking</label>
+            </div>
+            <div class="netbanking-options">
+              <select class="form-select mb-2">
+                <option selected disabled>Select Bank</option>
+                <option>HDFC Bank</option>
+                <option>ICICI Bank</option>
+                <option>SBI Bank</option>
+                <option>Axis Bank</option>
+              </select>
+            </div>
+
+            <!-- 🟢 UPI -->
+            <div class="form-check payment-option">
+              <input class="form-check-input" type="radio" name="payment" id="upi" onclick="showPaymentOption('upi')">
+              <label class="form-check-label" for="upi">UPI</label>
+            </div>
+
+            <div class="upi-options">
+              <p>Select your UPI App:</p>
+              <div class="d-flex flex-wrap gap-3">
+                <div class="upi-app" data-upi="Paytm">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Paytm_logo.png" alt="Paytm">
+                  <span>Paytm</span>
+                </div>
+                <div class="upi-app" data-upi="Google Pay">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRl5E2v7Ep_xjaf2CAsjQX8ML2UQaBnKQWBwQ&s" alt="Google Pay">
+                  <span>Google Pay</span>
+                </div>
+                <div class="upi-app" data-upi="PhonePe">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ9rlNlOBw7b4DVs0yz6UrLkXvTJFCgRxgkA&s" alt="PhonePe">
+                  <span>PhonePe</span>
+                </div>
+                <div class="upi-app" data-upi="Amazon Pay">
+                  <img src="https://cdn-icons-png.flaticon.com/512/5968/5968269.png" alt="Amazon Pay">
+                  <span>Amazon Pay</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-end mt-4">
+              <button class="btn btn-secondary me-2" onclick="goToStep(2)">⬅️ Back</button>
+              <button class="btn btn-success" onclick="confirmOrder()">✅ Confirm Order</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function renderCart() {
+      const cartContainer = document.getElementById("cart-container");
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "<p class='text-center text-muted'>Your cart is empty.</p>";
+        return;
+      }
+      let total = 0;
+      let tableHTML = `<table class="table table-bordered text-center bg-white shadow"><thead class="table-dark"><tr><th>Image</th><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Remove</th></tr></thead><tbody>`;
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        tableHTML += `<tr>
+          <td><img src="${item.image}" width="60"></td>
+          <td>${item.name}</td>
+          <td>₹${item.price}</td>
+          <td>
+            <div class="d-flex justify-content-center align-items-center">
+              <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)">-</button>
+              <span>${item.quantity}</span>
+              <button class="btn btn-sm btn-outline-secondary ms-2" onclick="updateQuantity(${index}, 1)">+</button>
+            </div>
+          </td>
+          <td>₹${itemTotal}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="removeItem(${index})">X</button></td>
+        </tr>`;
+      });
+      tableHTML += `</tbody></table><h4 class="text-end me-3">Total: ₹${total}</h4>`;
+      cartContainer.innerHTML = tableHTML;
+    }
+
+    function updateQuantity(index, change) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart[index].quantity = Math.max(1, cart[index].quantity + change);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    document.getElementById("placeOrderBtn").addEventListener("click", () => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) return alert("Your cart is empty!");
+      new bootstrap.Modal(document.getElementById("checkoutModal")).show();
+      goToStep(1);
+    });
+
+    function goToStep(step) {
+      document.querySelectorAll(".checkout-step").forEach(s => s.classList.add("d-none"));
+      document.getElementById(`step${step}`).classList.remove("d-none");
+      if (step === 2) renderSummary();
+    }
+
+    function renderSummary() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let total = 0;
+      let html = `<table class="table table-bordered text-center align-middle">
+        <thead class="table-dark"><tr><th>Image</th><th>Product</th><th>Qty</th><th>Price</th></tr></thead><tbody>`;
+      cart.forEach(item => {
+        html += `<tr><td><img src="${item.image}" class="product-img-sm"></td><td>${item.name}</td><td>${item.quantity}</td><td>₹${item.price * item.quantity}</td></tr>`;
+        total += item.price * item.quantity;
+      });
+      html += `</tbody></table><h5 class="text-end me-3">Total: ₹${total}</h5>`;
+      document.getElementById("orderSummary").innerHTML = html;
+    }
+
+    function showPaymentOption(option) {
+      document.querySelector(".upi-options").style.display = option === "upi" ? "block" : "none";
+      document.querySelector(".netbanking-options").style.display = option === "netbanking" ? "block" : "none";
+      document.querySelector(".card-options").style.display = option === "card" ? "block" : "none";
+    }
+
+    /* 🟢 UPI selection logic */
+    document.addEventListener("DOMContentLoaded", () => {
+      const upiApps = document.querySelectorAll(".upi-app");
+      upiApps.forEach(app => {
+        app.addEventListener("click", () => {
+          upiApps.forEach(a => a.classList.remove("selected"));
+          app.classList.add("selected");
+          console.log("Selected UPI App:", app.dataset.upi);
+        });
+      });
+    });
+
+    function confirmOrder() {
+      alert("🎉 Order placed successfully! Thank you for shopping with NeoStore!");
+      localStorage.removeItem("cart");
+      window.location.href = "index.html";
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
