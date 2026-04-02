@@ -6,52 +6,12 @@
   <title>Your Cart - NeoStore</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="cartstyle.css">
-  <!-- <style>
-    .product-img-sm {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-
-    .payment-option { margin-bottom: 10px; }
-    .upi-options, .netbanking-options, .card-options {
-      display: none;
-      margin-left: 20px;
-      margin-top: 10px;
-    }
-
-    /* 🟦 UPI Styles */
-    .upi-app {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border: 2px solid transparent;
-      border-radius: 10px;
-      padding: 8px 12px;
-      background: #fff;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .upi-app img {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-    }
-    .upi-app:hover {
-      background: #f8f9fa;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .upi-app.selected {
-      border: 2px solid #007bff;
-      background-color: #e6f0ff;
-    }
-  </style> -->
 </head>
 <body class="bg-light">
 
   <div class="container mt-5">
     <h2 class="text-center mb-4">🛒 Your Cart</h2>
+    <div id="sellerCartAlert" class="alert alert-warning d-none">Seller Preview Mode is active. Sellers can review products but cannot place orders.</div>
     <div id="cart-container" class="table-responsive"></div>
 
     <div class="text-center mt-4">
@@ -60,7 +20,6 @@
     </div>
   </div>
 
-  <!-- 🟩 Checkout Modal -->
   <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -69,8 +28,6 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-
-          <!-- STEP 1 -->
           <div id="step1" class="checkout-step">
             <h5 class="mb-3">1️⃣ Shipping Address</h5>
             <form id="addressForm">
@@ -96,7 +53,6 @@
             </form>
           </div>
 
-          <!-- STEP 2 -->
           <div id="step2" class="checkout-step d-none">
             <h5 class="mb-3">2️⃣ Order Summary</h5>
             <div id="orderSummary"></div>
@@ -106,17 +62,14 @@
             </div>
           </div>
 
-          <!-- STEP 3 -->
           <div id="step3" class="checkout-step d-none">
             <h5 class="mb-3">3️⃣ Payment Method</h5>
 
-            <!-- Cash on Delivery -->
             <div class="form-check payment-option">
               <input class="form-check-input" type="radio" name="payment" id="cod" checked onclick="showPaymentOption('none')">
               <label class="form-check-label" for="cod">Cash on Delivery</label>
             </div>
 
-            <!-- Credit/Debit/ATM Card -->
             <div class="form-check payment-option">
               <input class="form-check-input" type="radio" name="payment" id="card" onclick="showPaymentOption('card')">
               <label class="form-check-label" for="card">Credit / Debit / ATM Card</label>
@@ -130,7 +83,6 @@
               <input type="text" class="form-control mb-2" placeholder="Card Holder Name">
             </div>
 
-            <!-- Netbanking -->
             <div class="form-check payment-option">
               <input class="form-check-input" type="radio" name="payment" id="netbanking" onclick="showPaymentOption('netbanking')">
               <label class="form-check-label" for="netbanking">Net Banking</label>
@@ -145,7 +97,6 @@
               </select>
             </div>
 
-            <!-- 🟢 UPI -->
             <div class="form-check payment-option">
               <input class="form-check-input" type="radio" name="payment" id="upi" onclick="showPaymentOption('upi')">
               <label class="form-check-label" for="upi">UPI</label>
@@ -175,7 +126,7 @@
 
             <div class="text-end mt-4">
               <button class="btn btn-secondary me-2" onclick="goToStep(2)">⬅️ Back</button>
-              <button class="btn btn-success" onclick="confirmOrder()">✅ Confirm Order</button>
+              <button class="btn btn-success" id="confirmOrderBtn" onclick="confirmOrder()">✅ Confirm Order</button>
             </div>
           </div>
 
@@ -187,13 +138,39 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    const API_BASE = window.location.protocol === "file:" ? "http://localhost:5000" : "";
+    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+    const authToken = localStorage.getItem("token");
+
+    function getCart() {
+      return JSON.parse(localStorage.getItem("cart")) || [];
+    }
+
+    function isSellerPreview() {
+      return currentUser?.role === "seller";
+    }
+
+    function selectedPaymentMethod() {
+      if (document.getElementById("card").checked) return "Card";
+      if (document.getElementById("netbanking").checked) return "Net Banking";
+      if (document.getElementById("upi").checked) return "UPI";
+      return "Cash on Delivery";
+    }
+
     function renderCart() {
       const cartContainer = document.getElementById("cart-container");
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cart = getCart();
+
+      if (isSellerPreview()) {
+        document.getElementById("sellerCartAlert").classList.remove("d-none");
+        document.getElementById("placeOrderBtn").disabled = true;
+      }
+
       if (cart.length === 0) {
         cartContainer.innerHTML = "<p class='text-center text-muted'>Your cart is empty.</p>";
         return;
       }
+
       let total = 0;
       let tableHTML = `<table class="table table-bordered text-center bg-white shadow"><thead class="table-dark"><tr><th>Image</th><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Remove</th></tr></thead><tbody>`;
       cart.forEach((item, index) => {
@@ -205,13 +182,13 @@
           <td>₹${item.price}</td>
           <td>
             <div class="d-flex justify-content-center align-items-center">
-              <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)">-</button>
+              <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)" ${isSellerPreview() ? "disabled" : ""}>-</button>
               <span>${item.quantity}</span>
-              <button class="btn btn-sm btn-outline-secondary ms-2" onclick="updateQuantity(${index}, 1)">+</button>
+              <button class="btn btn-sm btn-outline-secondary ms-2" onclick="updateQuantity(${index}, 1)" ${isSellerPreview() ? "disabled" : ""}>+</button>
             </div>
           </td>
           <td>₹${itemTotal}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="removeItem(${index})">X</button></td>
+          <td><button class="btn btn-danger btn-sm" onclick="removeItem(${index})" ${isSellerPreview() ? "disabled" : ""}>X</button></td>
         </tr>`;
       });
       tableHTML += `</tbody></table><h4 class="text-end me-3">Total: ₹${total}</h4>`;
@@ -219,21 +196,28 @@
     }
 
     function updateQuantity(index, change) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (isSellerPreview()) return;
+      let cart = getCart();
       cart[index].quantity = Math.max(1, cart[index].quantity + change);
       localStorage.setItem("cart", JSON.stringify(cart));
       renderCart();
     }
 
     function removeItem(index) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (isSellerPreview()) return;
+      let cart = getCart();
       cart.splice(index, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
       renderCart();
     }
 
     document.getElementById("placeOrderBtn").addEventListener("click", () => {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (isSellerPreview()) {
+        alert("Seller Preview Mode is enabled. Sellers cannot place orders.");
+        return;
+      }
+
+      const cart = getCart();
       if (cart.length === 0) return alert("Your cart is empty!");
       new bootstrap.Modal(document.getElementById("checkoutModal")).show();
       goToStep(1);
@@ -246,7 +230,7 @@
     }
 
     function renderSummary() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cart = getCart();
       let total = 0;
       let html = `<table class="table table-bordered text-center align-middle">
         <thead class="table-dark"><tr><th>Image</th><th>Product</th><th>Qty</th><th>Price</th></tr></thead><tbody>`;
@@ -264,22 +248,78 @@
       document.querySelector(".card-options").style.display = option === "card" ? "block" : "none";
     }
 
-    /* 🟢 UPI selection logic */
     document.addEventListener("DOMContentLoaded", () => {
       const upiApps = document.querySelectorAll(".upi-app");
       upiApps.forEach(app => {
         app.addEventListener("click", () => {
           upiApps.forEach(a => a.classList.remove("selected"));
           app.classList.add("selected");
-          console.log("Selected UPI App:", app.dataset.upi);
         });
       });
     });
 
-    function confirmOrder() {
-      alert("🎉 Order placed successfully! Thank you for shopping with NeoStore!");
-      localStorage.removeItem("cart");
-      window.location.href = "index.html";
+    async function confirmOrder() {
+      if (isSellerPreview()) {
+        alert("Seller Preview Mode is enabled. Sellers cannot place orders.");
+        return;
+      }
+
+      if (!currentUser || currentUser.role !== "customer" || !authToken) {
+        alert("Please log in as a customer to place an order.");
+        return;
+      }
+
+      const deliveryAddress = {
+        fullName: document.getElementById("fullName").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        pincode: document.getElementById("pincode").value.trim(),
+      };
+
+      if (!deliveryAddress.fullName || !deliveryAddress.address || !deliveryAddress.city || !deliveryAddress.pincode) {
+        alert("Please complete your delivery address.");
+        return;
+      }
+
+      const cart = getCart();
+      if (!cart.length) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      const confirmOrderBtn = document.getElementById("confirmOrderBtn");
+      confirmOrderBtn.disabled = true;
+      confirmOrderBtn.textContent = "Placing Order...";
+
+      try {
+        const response = await fetch(`${API_BASE}/api/orders`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            items: cart,
+            deliveryAddress,
+            paymentMethod: selectedPaymentMethod(),
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Unable to place order.");
+        }
+
+        alert("🎉 Order placed successfully! Thank you for shopping with NeoStore!");
+        localStorage.removeItem("cart");
+        window.location.href = "index.html";
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        confirmOrderBtn.disabled = false;
+        confirmOrderBtn.textContent = "✅ Confirm Order";
+      }
     }
 
     renderCart();

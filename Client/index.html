@@ -18,11 +18,19 @@
 
   <!-- Message Box (Notification) -->
   <div id="message-box" class="message-box d-none"></div>
+  <div class="hero-glow hero-glow-left"></div>
+  <div class="hero-glow hero-glow-right"></div>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">NeoStore</a>
+      <a class="navbar-brand fw-bold" href="#">
+        <span class="brand-mark">N</span>
+        <span class="brand-copy">
+          <span class="brand-name">NeoStore</span>
+          <span class="brand-tag">Smart shopping, faster</span>
+        </span>
+      </a>
 
       <!-- Toggle Button -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -33,14 +41,24 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         
         <!-- Search Form (No reload) -->
-        <form class="d-flex me-3" role="search" id="searchForm" onsubmit="event.preventDefault(); return false;">
-          <input class="form-control me-2" type="search" placeholder="Search Products" id="searchInput" aria-label="Search"/>
-          <button class="btn btn-outline-light" type="submit">Search</button>
+        <form class="search-form me-3" role="search" id="searchForm" onsubmit="event.preventDefault(); return false;">
+          <div class="search-shell">
+            <i class="bi bi-search search-icon" aria-hidden="true"></i>
+            <input class="form-control search-input" type="search" placeholder="Search products, brands, keywords" id="searchInput" aria-label="Search"/>
+            <button class="btn search-btn" type="submit" id="searchButton">Search</button>
+            <button class="btn clear-search-btn d-none" type="button" id="clearSearchButton">Clear</button>
+          </div>
         </form>
 
         <ul class="navbar-nav align-items-center" id="navbar-links">
           <li class="nav-item">
-            <a class="nav-link" href="cart.html">Cart</a>
+            <a class="nav-link cart-link" href="cart.html">
+              <span>Cart</span>
+              <span id="cartCountBadge" class="cart-count-badge d-none">0</span>
+            </a>
+          </li>
+          <li class="nav-item d-none" id="myOrdersNav">
+            <a class="nav-link orders-link" href="my-orders.html">My Orders</a>
           </li>
           
           <!-- Login Link -->
@@ -55,6 +73,7 @@
               <p><strong>Name:</strong> <span id="dropdownName"></span></p>
               <p><strong>Email:</strong> <span id="dropdownEmail"></span></p>
               <p><strong>Phone:</strong> <span id="dropdownPhone"></span></p>
+              <p class="profile-action-link d-none" id="dropdownOrdersLink"><a href="my-orders.html">Track Orders</a></p>
               <p id="logout-btn"><strong>Logout</strong></p>
             </div>
           </li>
@@ -64,8 +83,41 @@
   </nav>
 
   <!-- Product Display Section -->
-  <div class="container mt-4">
-    <h2 class="text-center mb-4">🛍️ Available Products</h2>
+  <div class="container mt-4 shop-shell">
+    <section class="shop-hero">
+      <div class="hero-copy">
+        <span class="hero-kicker">Trending marketplace</span>
+        <h1>Discover reliable tech picks with store-quality polish.</h1>
+        <p>Browse curated gadgets, compare value quickly, and add your favorites to cart with a faster shopping flow.</p>
+      </div>
+      <div class="hero-highlights">
+        <div class="hero-stat">
+          <strong>24h</strong>
+          <span>Fast dispatch on selected items</span>
+        </div>
+        <div class="hero-stat">
+          <strong>4.8/5</strong>
+          <span>Average experience across top picks</span>
+        </div>
+        <div class="hero-stat">
+          <strong>Secure</strong>
+          <span>Simple cart, login, and checkout journey</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-heading">
+      <div>
+        <span class="section-eyebrow">Featured collection</span>
+        <h2>Available Products</h2>
+      </div>
+    </div>
+    <div id="sellerPreviewBanner" class="seller-preview-banner d-none">
+      Seller Preview Mode: products are visible for review, but cart and checkout are disabled for seller accounts.
+    </div>
+    <div class="search-feedback-wrap">
+      <p id="searchFeedback" class="search-feedback d-none" aria-live="polite"></p>
+    </div>
     
     <!-- Product Grid -->
     <div id="product-list" class="row g-4">
@@ -100,7 +152,7 @@
             <li><a href="#">Home</a></li>
             <li><a href="cart.html">My Cart</a></li>
             <li><a href="login.html">My Account</a></li>
-            <li><a href="#">Order Tracking</a></li>
+            <li><a href="my-orders.html">Order Tracking</a></li>
             <li><a href="#">Help & FAQs</a></li>
           </ul>
         </div>

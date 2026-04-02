@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seller Dashboard - NeoStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="seller-dashboard.css" />
+</head>
+<body>
+  <div class="seller-layout">
+    <aside class="seller-sidebar">
+        <div class="seller-brand">
+          <div class="seller-brand-mark">N</div>
+          <div>
+            <strong>NeoStore Seller</strong>
+            <small id="sidebarSellerName">Seller account</small>
+          </div>
+        </div>
+
+      <nav class="seller-nav">
+        <button class="seller-nav-link active" data-section="dashboard"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></button>
+        <button class="seller-nav-link" data-section="products"><i class="bi bi-box-seam"></i><span>Products</span></button>
+        <button class="seller-nav-link" data-section="orders"><i class="bi bi-receipt"></i><span>Orders</span></button>
+        <button class="seller-nav-link" data-section="add-product"><i class="bi bi-plus-square"></i><span>Add Product</span></button>
+        <button class="seller-nav-link" data-section="analytics"><i class="bi bi-graph-up-arrow"></i><span>Analytics</span></button>
+        <button class="seller-nav-link" data-section="profile"><i class="bi bi-person-badge"></i><span>Profile</span></button>
+        <button class="seller-nav-link logout-link" id="logoutSellerBtn"><i class="bi bi-box-arrow-right"></i><span>Logout</span></button>
+      </nav>
+    </aside>
+
+    <main class="seller-main">
+      <header class="seller-topbar">
+        <div>
+          <span class="seller-kicker">Seller workspace</span>
+          <h1 id="sellerWelcome">Welcome back</h1>
+          <p id="sellerMeta">Manage your products, orders, analytics, and store profile from one place.</p>
+        </div>
+        <div class="seller-topbar-actions">
+          <a href="index.html" class="btn btn-outline-dark">View Storefront</a>
+          <button class="btn btn-dark" data-section-jump="add-product">Add Product</button>
+        </div>
+      </header>
+
+      <div id="dashboardAlert" class="dashboard-alert d-none"></div>
+
+      <section class="seller-section active" id="section-dashboard">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span>Total Products</span>
+            <strong id="statProducts">0</strong>
+            <small>Items currently listed in your catalog</small>
+          </article>
+          <article class="stat-card">
+            <span>Total Orders</span>
+            <strong id="statOrders">0</strong>
+            <small>Orders linked to your seller account</small>
+          </article>
+          <article class="stat-card">
+            <span>Total Revenue</span>
+            <strong id="statRevenue">₹0</strong>
+            <small>Revenue excluding cancelled orders</small>
+          </article>
+          <article class="stat-card">
+            <span>Pending Orders</span>
+            <strong id="statPending">0</strong>
+            <small>Orders waiting for processing</small>
+          </article>
+        </div>
+
+        <div class="dashboard-panels">
+          <article class="panel-card">
+            <div class="panel-head">
+              <h2>Recent Products</h2>
+              <button class="btn btn-sm btn-outline-dark" data-section-jump="products">Manage</button>
+            </div>
+            <div id="recentProducts" class="stack-list"></div>
+          </article>
+
+          <article class="panel-card">
+            <div class="panel-head">
+              <h2>Recent Orders</h2>
+              <button class="btn btn-sm btn-outline-dark" data-section-jump="orders">View all</button>
+            </div>
+            <div id="recentOrders" class="stack-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="seller-section" id="section-products">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Manage Products</h2>
+            <button class="btn btn-dark btn-sm" data-section-jump="add-product">New Product</button>
+          </div>
+          <div class="table-shell">
+            <table class="table align-middle seller-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="seller-section" id="section-orders">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Orders Management</h2>
+            <span class="panel-subtext">Track current order status and update fulfillment progress.</span>
+          </div>
+          <div class="table-shell">
+            <table class="table align-middle seller-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Customer</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Delivery</th>
+                  <th>Status</th>
+                  <th>Update</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="seller-section" id="section-add-product">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2 id="productFormTitle">Add Product</h2>
+            <span class="panel-subtext">Create or update seller catalog items from this panel.</span>
+          </div>
+
+          <form id="productForm" class="seller-form">
+            <input type="hidden" id="productId" />
+            <div class="form-grid">
+              <div>
+                <label for="productName">Product name</label>
+                <input class="form-control" id="productName" required />
+              </div>
+              <div>
+                <label for="productCategory">Category</label>
+                <input class="form-control" id="productCategory" placeholder="Mobiles, Accessories, Audio" required />
+              </div>
+              <div>
+                <label for="productPrice">Price</label>
+                <input class="form-control" id="productPrice" type="number" min="0" step="0.01" required />
+              </div>
+              <div>
+                <label for="productImage">Image URL</label>
+                <input class="form-control" id="productImage" type="url" placeholder="https://example.com/product.jpg" />
+              </div>
+              <div class="full-span">
+                <label for="productDescription">Description</label>
+                <textarea class="form-control" id="productDescription" rows="4" required></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-outline-dark" type="button" id="cancelEditBtn">Cancel</button>
+              <button class="btn btn-dark" type="submit" id="productSubmitBtn">Save Product</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="seller-section" id="section-analytics">
+        <div class="analytics-grid">
+          <article class="panel-card">
+            <div class="panel-head">
+              <h2>Sales Summary</h2>
+              <span class="panel-subtext">Quick business snapshot based on seller orders.</span>
+            </div>
+            <div class="analytics-cards">
+              <div>
+                <span>Revenue</span>
+                <strong id="analyticsRevenue">₹0</strong>
+              </div>
+              <div>
+                <span>Orders completed</span>
+                <strong id="analyticsDelivered">0</strong>
+              </div>
+              <div>
+                <span>Products live</span>
+                <strong id="analyticsProducts">0</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel-card chart-placeholder">
+            <div class="panel-head">
+              <h2>Performance Chart</h2>
+              <span class="panel-subtext">Placeholder ready for future chart integration.</span>
+            </div>
+            <div class="chart-bars">
+              <span style="height: 50%"></span>
+              <span style="height: 72%"></span>
+              <span style="height: 40%"></span>
+              <span style="height: 86%"></span>
+              <span style="height: 58%"></span>
+              <span style="height: 92%"></span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="seller-section" id="section-profile">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Seller Profile</h2>
+            <span class="panel-subtext">Current account and shop details.</span>
+          </div>
+          <div class="profile-grid">
+            <div class="profile-item">
+              <span>Account Name</span>
+              <strong id="profileName">-</strong>
+            </div>
+            <div class="profile-item">
+              <span>Email</span>
+              <strong id="profileEmail">-</strong>
+            </div>
+            <div class="profile-item">
+              <span>Phone</span>
+              <strong id="profilePhone">-</strong>
+            </div>
+            <div class="profile-item">
+              <span>Shop Name</span>
+              <strong id="profileShop">-</strong>
+            </div>
+            <div class="profile-item">
+              <span>Role</span>
+              <strong id="profileRole">Seller</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="seller-dashboard.js"></script>
+</body>
+</html>

@@ -5,66 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login - NeoStore</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="loginstyle.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="auth.css" />
 </head>
-<body class="p-5">
+<body class="auth-page" data-auth-mode="login">
+  <div class="auth-shell">
+    <section class="auth-brand-panel">
+      <a href="index.html" class="auth-brand">
+        <span class="auth-brand-mark">N</span>
+        <span>
+          <strong>NeoStore</strong>
+          <small>Trusted shopping for modern buyers</small>
+        </span>
+      </a>
 
-  <!-- Center message box -->
-  <div id="message-box" class="message-box d-none"></div>
+      <div class="auth-brand-copy">
+        <span class="auth-eyebrow">Welcome back</span>
+        <h1>Login securely and continue your shopping journey.</h1>
+        <p>Track orders, manage saved items, and checkout faster with your NeoStore account.</p>
+      </div>
 
-  <h2>Login</h2>
-  <form id="loginForm" class="w-50">
-    <input type="email" class="form-control mb-3" placeholder="Email" id="email" required />
-    <input type="password" class="form-control mb-3" placeholder="Password" id="password" required />
-    <button class="btn btn-success" type="submit">Login</button>
-  </form>
+      <div class="auth-points">
+        <div>
+          <i class="bi bi-shield-check"></i>
+          <span>Encrypted password storage with secure authentication</span>
+        </div>
+        <div>
+          <i class="bi bi-lightning-charge"></i>
+          <span>Fast checkout and smooth cross-device shopping experience</span>
+        </div>
+        <div>
+          <i class="bi bi-bag-check"></i>
+          <span>Designed for customers today and seller/admin roles tomorrow</span>
+        </div>
+      </div>
+    </section>
 
-  <p class="mt-3">New user? <a href="signup.html">Signup</a></p>
+    <section class="auth-form-panel">
+      <div class="auth-card">
+        <div class="auth-card-header">
+          <span class="auth-chip">Account Access</span>
+          <h2>Sign in to NeoStore</h2>
+          <p>Use your registered email and password to access your account.</p>
+        </div>
 
-  <script>
-    // ✅ Centered Message Function
-    function showMessage(message) {
-      const msgBox = document.getElementById("message-box");
-      msgBox.textContent = message;
-      msgBox.classList.remove("d-none");
-      msgBox.classList.add("show");
+        <div id="authAlert" class="auth-alert d-none" role="alert"></div>
 
-      setTimeout(() => {
-        msgBox.classList.remove("show");
-        msgBox.classList.add("d-none");
-      }, 2500); // message hides after 2.5 seconds
-    }
+        <div class="role-switch" id="roleSwitch">
+          <button type="button" class="role-tab active" data-role-tab="customer">Customer</button>
+          <button type="button" class="role-tab" data-role-tab="seller">Seller</button>
+        </div>
 
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+        <form id="authForm" novalidate>
+          <input type="hidden" id="role" name="role" value="customer" />
 
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+          <div class="auth-field">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" />
+            <small class="field-error" data-error-for="email"></small>
+          </div>
 
-      try {
-        const res = await fetch("http://localhost:5000/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
+          <div class="auth-field">
+            <label for="password">Password</label>
+            <div class="password-wrap">
+              <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" />
+              <button type="button" class="password-toggle" data-toggle-password="password" aria-label="Show password">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <small class="field-error" data-error-for="password"></small>
+          </div>
 
-        const data = await res.json();
+          <button class="btn auth-submit-btn" id="submitButton" type="submit">
+            <span class="btn-text">Login</span>
+            <span class="spinner-border spinner-border-sm d-none" id="submitSpinner" aria-hidden="true"></span>
+          </button>
+        </form>
 
-        if (res.ok) {
-          localStorage.setItem("user", JSON.stringify(data.user));
-          showMessage("Login successfully ✅");
+        <p class="auth-footer-text">
+          New to NeoStore?
+          <a href="signup.html">Create your account</a>
+        </p>
+      </div>
+    </section>
+  </div>
 
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 2500);
-        } else {
-          alert(data.message || "Login failed");
-        }
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-  </script>
+  <script src="auth.js"></script>
 </body>
 </html>

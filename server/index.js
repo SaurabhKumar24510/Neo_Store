@@ -9,24 +9,36 @@ require('dotenv').config();
 connectDB();
 
 const app = express();
+const clientPath = path.resolve(__dirname, '../Client');
 
 // ✅ Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ✅ Routes
 const authRoutes = require("./routes/authRoutes");
-const productRoutes = require("./routes/productRoutes"); // <-- 🔹 New line added
+const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes); // <-- 🔹 Product routes connected
+app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 
 // ✅ Serve frontend static files (after API routes)
-app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static(clientPath));
 
 // ✅ Fallback to index.html for unmatched routes (for SPA or default route)
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+  res.sendFile(path.join(clientPath, 'index.html'));
+});
+
+app.get("/seller-dashboard", (req, res) => {
+  res.sendFile(path.join(clientPath, "seller-dashboard.html"));
+});
+
+app.get("/my-orders", (req, res) => {
+  res.sendFile(path.join(clientPath, "my-orders.html"));
 });
 
 // ✅ Start the server
