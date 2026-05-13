@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - NeoStore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body class="checkout-page">
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="checkoutToast" class="toast align-items-center border-0" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="checkoutToastMessage"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="checkout-navbar">
+    <div class="checkout-shell checkout-navbar-inner">
+      <a href="index.html" class="checkout-brand">
+        <span class="checkout-brand-mark">N</span>
+        <span class="checkout-brand-text">
+          <strong>NeoStore</strong>
+          <small>Secure checkout</small>
+        </span>
+      </a>
+      <div class="checkout-nav-actions">
+        <a href="cart.html" class="checkout-back-link"><i class="bi bi-arrow-left"></i> Back to Cart</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="checkout-main">
+    <div class="checkout-shell">
+      <header class="checkout-header">
+        <div>
+          <span class="checkout-kicker">NeoStore checkout</span>
+          <h1>Complete your order</h1>
+          <p>Fast, secure, and designed for a smooth purchase flow across address, review, and payment.</p>
+        </div>
+        <div class="checkout-header-assurance" aria-label="Checkout assurances">
+          <span><i class="bi bi-shield-check"></i> Secure checkout</span>
+          <span><i class="bi bi-truck"></i> Reliable delivery</span>
+          <span><i class="bi bi-arrow-counterclockwise"></i> Easy returns</span>
+        </div>
+      </header>
+
+      <div class="checkout-layout">
+        <div class="checkout-workspace">
+          <div class="checkout-stepper" id="checkoutStepper">
+            <button class="stepper-step active" type="button" data-step="1">
+              <span class="stepper-circle">1</span>
+              <span class="stepper-copy">
+                <strong>Address</strong>
+                <small>Delivery details</small>
+              </span>
+            </button>
+            <div class="stepper-line"></div>
+            <button class="stepper-step" type="button" data-step="2">
+              <span class="stepper-circle">2</span>
+              <span class="stepper-copy">
+                <strong>Review</strong>
+                <small>Order overview</small>
+              </span>
+            </button>
+            <div class="stepper-line"></div>
+            <button class="stepper-step" type="button" data-step="3">
+              <span class="stepper-circle">3</span>
+              <span class="stepper-copy">
+                <strong>Payment</strong>
+                <small>Choose a method</small>
+              </span>
+            </button>
+          </div>
+
+        <section class="checkout-panel">
+          <div id="checkoutStepContent"></div>
+        </section>
+      </div>
+
+        <div class="checkout-summary-column">
+        <aside class="checkout-summary">
+          <div class="summary-head">
+            <span class="checkout-kicker">Order summary</span>
+            <h2>Price details</h2>
+          </div>
+          <div id="summaryMiniList" class="summary-mini-list"></div>
+          <div class="summary-breakdown">
+            <div class="summary-line"><span>Subtotal</span><strong id="summarySubtotal">₹0</strong></div>
+            <div class="summary-line"><span>Discount</span><strong class="text-success" id="summaryDiscount">-₹0</strong></div>
+            <div class="summary-line"><span>Delivery</span><strong id="summaryDelivery">₹0</strong></div>
+          </div>
+          <div class="summary-total">
+            <span>Total payable</span>
+            <strong id="summaryTotal">₹0</strong>
+          </div>
+          <button id="summaryPlaceOrderBtn" class="btn btn-primary summary-place-btn" type="button">
+            <span class="btn-copy">Review Payment</span>
+            <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+          </button>
+        </aside>
+      </div>
+    </div>
+    </div>
+  </main>
+
+  <footer class="checkout-page-footer">
+    <div class="checkout-shell checkout-footer-inner">
+      <span>NeoStore secure checkout</span>
+      <span>Protected payments</span>
+      <span>Customer-first delivery experience</span>
+    </div>
+  </footer>
+
+  <div class="mobile-step-actions d-xl-none">
+    <button id="mobileBackBtn" class="btn btn-outline-dark" type="button">Back</button>
+    <button id="mobileContinueBtn" class="btn btn-primary" type="button">
+      <span class="btn-copy">Continue</span>
+      <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="checkout.js"></script>
+</body>
+</html>

@@ -3,326 +3,238 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Cart - NeoStore</title>
+  <title>Cart - NeoStore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="cartstyle.css">
 </head>
-<body class="bg-light">
+<body class="cart-page">
+  <div class="cart-background cart-background-left"></div>
+  <div class="cart-background cart-background-right"></div>
 
-  <div class="container mt-5">
-    <h2 class="text-center mb-4">🛒 Your Cart</h2>
-    <div id="sellerCartAlert" class="alert alert-warning d-none">Seller Preview Mode is active. Sellers can review products but cannot place orders.</div>
-    <div id="cart-container" class="table-responsive"></div>
-
-    <div class="text-center mt-4">
-      <a href="index.html" class="btn btn-secondary me-2">Continue Shopping</a>
-      <button id="placeOrderBtn" class="btn btn-success">Place Order</button>
-    </div>
-  </div>
-
-  <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header bg-dark text-white">
-          <h5 class="modal-title">Checkout Process</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div id="step1" class="checkout-step">
-            <h5 class="mb-3">1️⃣ Shipping Address</h5>
-            <form id="addressForm">
-              <div class="mb-3">
-                <label class="form-label">Full Name</label>
-                <input type="text" id="fullName" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Address</label>
-                <textarea id="address" class="form-control" rows="2" required></textarea>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">City</label>
-                <input type="text" id="city" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Pincode</label>
-                <input type="text" id="pincode" class="form-control" required pattern="[0-9]{6}">
-              </div>
-              <div class="text-end">
-                <button type="button" class="btn btn-dark" onclick="goToStep(2)">Next ➡️</button>
-              </div>
-            </form>
-          </div>
-
-          <div id="step2" class="checkout-step d-none">
-            <h5 class="mb-3">2️⃣ Order Summary</h5>
-            <div id="orderSummary"></div>
-            <div class="text-end mt-3">
-              <button class="btn btn-secondary me-2" onclick="goToStep(1)">⬅️ Back</button>
-              <button class="btn btn-dark" onclick="goToStep(3)">Next ➡️</button>
-            </div>
-          </div>
-
-          <div id="step3" class="checkout-step d-none">
-            <h5 class="mb-3">3️⃣ Payment Method</h5>
-
-            <div class="form-check payment-option">
-              <input class="form-check-input" type="radio" name="payment" id="cod" checked onclick="showPaymentOption('none')">
-              <label class="form-check-label" for="cod">Cash on Delivery</label>
-            </div>
-
-            <div class="form-check payment-option">
-              <input class="form-check-input" type="radio" name="payment" id="card" onclick="showPaymentOption('card')">
-              <label class="form-check-label" for="card">Credit / Debit / ATM Card</label>
-            </div>
-            <div class="card-options">
-              <input type="text" class="form-control mb-2" placeholder="Card Number">
-              <div class="row">
-                <div class="col"><input type="text" class="form-control mb-2" placeholder="MM/YY"></div>
-                <div class="col"><input type="text" class="form-control mb-2" placeholder="CVV"></div>
-              </div>
-              <input type="text" class="form-control mb-2" placeholder="Card Holder Name">
-            </div>
-
-            <div class="form-check payment-option">
-              <input class="form-check-input" type="radio" name="payment" id="netbanking" onclick="showPaymentOption('netbanking')">
-              <label class="form-check-label" for="netbanking">Net Banking</label>
-            </div>
-            <div class="netbanking-options">
-              <select class="form-select mb-2">
-                <option selected disabled>Select Bank</option>
-                <option>HDFC Bank</option>
-                <option>ICICI Bank</option>
-                <option>SBI Bank</option>
-                <option>Axis Bank</option>
-              </select>
-            </div>
-
-            <div class="form-check payment-option">
-              <input class="form-check-input" type="radio" name="payment" id="upi" onclick="showPaymentOption('upi')">
-              <label class="form-check-label" for="upi">UPI</label>
-            </div>
-
-            <div class="upi-options">
-              <p>Select your UPI App:</p>
-              <div class="d-flex flex-wrap gap-3">
-                <div class="upi-app" data-upi="Paytm">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Paytm_logo.png" alt="Paytm">
-                  <span>Paytm</span>
-                </div>
-                <div class="upi-app" data-upi="Google Pay">
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRl5E2v7Ep_xjaf2CAsjQX8ML2UQaBnKQWBwQ&s" alt="Google Pay">
-                  <span>Google Pay</span>
-                </div>
-                <div class="upi-app" data-upi="PhonePe">
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ9rlNlOBw7b4DVs0yz6UrLkXvTJFCgRxgkA&s" alt="PhonePe">
-                  <span>PhonePe</span>
-                </div>
-                <div class="upi-app" data-upi="Amazon Pay">
-                  <img src="https://cdn-icons-png.flaticon.com/512/5968/5968269.png" alt="Amazon Pay">
-                  <span>Amazon Pay</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="text-end mt-4">
-              <button class="btn btn-secondary me-2" onclick="goToStep(2)">⬅️ Back</button>
-              <button class="btn btn-success" id="confirmOrderBtn" onclick="confirmOrder()">✅ Confirm Order</button>
-            </div>
-          </div>
-
-        </div>
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="cartToast" class="toast align-items-center border-0" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="cartToastMessage"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <nav class="cart-navbar">
+    <div class="container cart-navbar-inner">
+      <a href="index.html" class="cart-brand">
+        <span class="cart-brand-mark">N</span>
+        <span class="cart-brand-text">
+          <strong>NeoStore</strong>
+          <small>Premium shopping</small>
+        </span>
+      </a>
 
-  <script>
-    const API_BASE = window.location.protocol === "file:" ? "http://localhost:5000" : "";
-    const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-    const authToken = localStorage.getItem("token");
+      <div class="cart-navbar-links">
+        <a href="index.html">Home</a>
+        <a href="my-orders.html">Orders</a>
+        <a href="login.html">Account</a>
+      </div>
 
-    function getCart() {
-      return JSON.parse(localStorage.getItem("cart")) || [];
-    }
+      <a href="index.html" class="cart-navbar-back">
+        <i class="bi bi-arrow-left"></i>
+        Continue Shopping
+      </a>
+    </div>
+  </nav>
 
-    function isSellerPreview() {
-      return currentUser?.role === "seller";
-    }
+  <main class="container py-4 py-lg-5 cart-main">
+    <section class="cart-hero">
+      <div>
+        <span class="cart-kicker">Your shopping bag</span>
+        <h1>Review your cart.</h1>
+        <p>Inspired by modern e-commerce flows with cleaner product cards, faster quantity controls, and a focused summary panel.</p>
+      </div>
+      <div class="cart-hero-actions">
+        <a href="index.html" class="btn btn-light cart-ghost-btn">
+          <i class="bi bi-arrow-left"></i>
+          Continue Shopping
+        </a>
+        <div class="cart-hero-stat">
+          <span id="cartItemsCount">0</span>
+          <small>items in cart</small>
+        </div>
+      </div>
+    </section>
 
-    function selectedPaymentMethod() {
-      if (document.getElementById("card").checked) return "Card";
-      if (document.getElementById("netbanking").checked) return "Net Banking";
-      if (document.getElementById("upi").checked) return "UPI";
-      return "Cash on Delivery";
-    }
+    <div id="sellerCartAlert" class="seller-cart-alert d-none">
+      <i class="bi bi-shop-window"></i>
+      Seller Preview Mode is active. You can review products here, but checkout is disabled for seller accounts.
+    </div>
 
-    function renderCart() {
-      const cartContainer = document.getElementById("cart-container");
-      const cart = getCart();
-
-      if (isSellerPreview()) {
-        document.getElementById("sellerCartAlert").classList.remove("d-none");
-        document.getElementById("placeOrderBtn").disabled = true;
-      }
-
-      if (cart.length === 0) {
-        cartContainer.innerHTML = "<p class='text-center text-muted'>Your cart is empty.</p>";
-        return;
-      }
-
-      let total = 0;
-      let tableHTML = `<table class="table table-bordered text-center bg-white shadow"><thead class="table-dark"><tr><th>Image</th><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Remove</th></tr></thead><tbody>`;
-      cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        tableHTML += `<tr>
-          <td><img src="${item.image}" width="60"></td>
-          <td>${item.name}</td>
-          <td>₹${item.price}</td>
-          <td>
-            <div class="d-flex justify-content-center align-items-center">
-              <button class="btn btn-sm btn-outline-secondary me-2" onclick="updateQuantity(${index}, -1)" ${isSellerPreview() ? "disabled" : ""}>-</button>
-              <span>${item.quantity}</span>
-              <button class="btn btn-sm btn-outline-secondary ms-2" onclick="updateQuantity(${index}, 1)" ${isSellerPreview() ? "disabled" : ""}>+</button>
+    <div class="row g-4 align-items-start">
+      <div class="col-12 col-xl-8">
+        <section class="cart-panel">
+          <div class="panel-header">
+            <div>
+              <span class="panel-kicker">Cart items</span>
+              <h2>Your selected products</h2>
             </div>
-          </td>
-          <td>₹${itemTotal}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="removeItem(${index})" ${isSellerPreview() ? "disabled" : ""}>X</button></td>
-        </tr>`;
-      });
-      tableHTML += `</tbody></table><h4 class="text-end me-3">Total: ₹${total}</h4>`;
-      cartContainer.innerHTML = tableHTML;
-    }
+            <span class="panel-meta" id="panelMeta">Loading cart...</span>
+          </div>
 
-    function updateQuantity(index, change) {
-      if (isSellerPreview()) return;
-      let cart = getCart();
-      cart[index].quantity = Math.max(1, cart[index].quantity + change);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart();
-    }
+          <div id="cartContent"></div>
+        </section>
+      </div>
 
-    function removeItem(index) {
-      if (isSellerPreview()) return;
-      let cart = getCart();
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart();
-    }
+      <div class="col-12 col-xl-4">
+        <aside class="summary-card" id="summaryCard">
+          <div class="summary-head">
+            <div>
+              <span class="panel-kicker">Order summary</span>
+              <h2>Price details</h2>
+            </div>
+            <div class="summary-head-actions">
+              <div class="summary-badge" id="savedBadge">You saved ₹0</div>
+              <button class="summary-toggle-btn d-xl-none" id="summaryToggleBtn" type="button" aria-label="Toggle summary">
+                <span id="summaryToggleText">Show details</span>
+                <i class="bi bi-chevron-down" id="summaryToggleIcon"></i>
+              </button>
+            </div>
+          </div>
 
-    document.getElementById("placeOrderBtn").addEventListener("click", () => {
-      if (isSellerPreview()) {
-        alert("Seller Preview Mode is enabled. Sellers cannot place orders.");
-        return;
-      }
+          <div class="summary-body">
+            <div class="coupon-shell">
+              <label for="couponCode" class="summary-label">Coupon code</label>
+              <div class="coupon-row">
+                <input id="couponCode" class="form-control" type="text" placeholder="Try SAVE10 or FREESHIP">
+                <button id="applyCouponBtn" class="btn btn-dark ripple-host" type="button">Apply</button>
+              </div>
+              <small id="couponMessage" class="coupon-message">Apply a coupon to unlock instant savings.</small>
+            </div>
 
-      const cart = getCart();
-      if (cart.length === 0) return alert("Your cart is empty!");
-      new bootstrap.Modal(document.getElementById("checkoutModal")).show();
-      goToStep(1);
-    });
+            <div class="summary-lines">
+              <div class="summary-line">
+                <span>Subtotal</span>
+                <strong id="subtotalAmount">₹0</strong>
+              </div>
+              <div class="summary-line">
+                <span>Discount</span>
+                <strong class="text-success" id="discountAmount">-₹0</strong>
+              </div>
+              <div class="summary-line">
+                <span>Delivery charges</span>
+                <strong id="deliveryAmount">₹0</strong>
+              </div>
+            </div>
 
-    function goToStep(step) {
-      document.querySelectorAll(".checkout-step").forEach(s => s.classList.add("d-none"));
-      document.getElementById(`step${step}`).classList.remove("d-none");
-      if (step === 2) renderSummary();
-    }
+            <div class="summary-total">
+              <div>
+                <span>Total amount</span>
+                <strong id="finalAmount">₹0</strong>
+              </div>
+              <small id="summarySupportCopy">Secure checkout with address and payment confirmation.</small>
+            </div>
 
-    function renderSummary() {
-      const cart = getCart();
-      let total = 0;
-      let html = `<table class="table table-bordered text-center align-middle">
-        <thead class="table-dark"><tr><th>Image</th><th>Product</th><th>Qty</th><th>Price</th></tr></thead><tbody>`;
-      cart.forEach(item => {
-        html += `<tr><td><img src="${item.image}" class="product-img-sm"></td><td>${item.name}</td><td>${item.quantity}</td><td>₹${item.price * item.quantity}</td></tr>`;
-        total += item.price * item.quantity;
-      });
-      html += `</tbody></table><h5 class="text-end me-3">Total: ₹${total}</h5>`;
-      document.getElementById("orderSummary").innerHTML = html;
-    }
+            <button id="proceedCheckoutBtn" class="btn btn-success summary-cta ripple-host" type="button">
+              <span class="btn-copy">Proceed to Checkout</span>
+              <span class="spinner-border spinner-border-sm d-none" id="checkoutSpinner" aria-hidden="true"></span>
+            </button>
 
-    function showPaymentOption(option) {
-      document.querySelector(".upi-options").style.display = option === "upi" ? "block" : "none";
-      document.querySelector(".netbanking-options").style.display = option === "netbanking" ? "block" : "none";
-      document.querySelector(".card-options").style.display = option === "card" ? "block" : "none";
-    }
+            <a href="index.html" class="btn btn-outline-dark summary-secondary">Continue Shopping</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const upiApps = document.querySelectorAll(".upi-app");
-      upiApps.forEach(app => {
-        app.addEventListener("click", () => {
-          upiApps.forEach(a => a.classList.remove("selected"));
-          app.classList.add("selected");
-        });
-      });
-    });
+  <footer class="cart-footer">
+    <div class="cart-footer-shell">
+      <div class="cart-footer-grid">
+        <section class="footer-column footer-column-wide">
+          <h3>Need help before checkout?</h3>
+          <p>Our support team can help with tracking, returns, payments, delivery timelines, and product questions so you can order with confidence.</p>
+          <div class="footer-links footer-links-support">
+            <a href="my-orders.html"><i class="bi bi-box-seam"></i><span>Track Order</span></a>
+            <a href="my-orders.html"><i class="bi bi-arrow-counterclockwise"></i><span>Return & Refund</span></a>
+            <a href="index.html"><i class="bi bi-patch-question"></i><span>FAQs</span></a>
+            <a href="login.html"><i class="bi bi-headset"></i><span>Contact Support</span></a>
+          </div>
+        </section>
 
-    async function confirmOrder() {
-      if (isSellerPreview()) {
-        alert("Seller Preview Mode is enabled. Sellers cannot place orders.");
-        return;
-      }
+        <section class="footer-column">
+          <h4>Customer Services</h4>
+          <div class="footer-links">
+            <a href="login.html">My Account</a>
+            <a href="my-orders.html">Orders</a>
+            <a href="index.html">Wishlist</a>
+            <a href="login.html">Address Book</a>
+          </div>
+        </section>
 
-      if (!currentUser || currentUser.role !== "customer" || !authToken) {
-        alert("Please log in as a customer to place an order.");
-        return;
-      }
+        <section class="footer-column">
+          <h4>Company Info</h4>
+          <div class="footer-links">
+            <a href="index.html">About Us</a>
+            <a href="index.html">Careers</a>
+            <a href="index.html">Privacy Policy</a>
+            <a href="index.html">Terms & Conditions</a>
+          </div>
+        </section>
 
-      const deliveryAddress = {
-        fullName: document.getElementById("fullName").value.trim(),
-        address: document.getElementById("address").value.trim(),
-        city: document.getElementById("city").value.trim(),
-        pincode: document.getElementById("pincode").value.trim(),
-      };
+        <section class="footer-column">
+          <h4>Contact</h4>
+          <div class="footer-contact-list">
+            <a href="mailto:support@neostore.com"><i class="bi bi-envelope"></i><span>support@neostore.com</span></a>
+            <a href="tel:+919876543210"><i class="bi bi-telephone"></i><span>+91 98765 43210</span></a>
+            <span><i class="bi bi-clock"></i><span>Mon to Sat, 9 AM to 8 PM</span></span>
+          </div>
+        </section>
 
-      if (!deliveryAddress.fullName || !deliveryAddress.address || !deliveryAddress.city || !deliveryAddress.pincode) {
-        alert("Please complete your delivery address.");
-        return;
-      }
+        <section class="footer-column">
+          <h4>Newsletter</h4>
+          <p class="footer-note">Get updates on offers & new arrivals</p>
+          <form class="footer-newsletter" onsubmit="event.preventDefault();">
+            <input type="email" class="form-control" placeholder="Enter your email" aria-label="Email address">
+            <button type="submit" class="btn btn-light">Subscribe</button>
+          </form>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </section>
+      </div>
 
-      const cart = getCart();
-      if (!cart.length) {
-        alert("Your cart is empty.");
-        return;
-      }
+      <div class="cart-trust-row">
+        <div class="trust-pill"><i class="bi bi-shield-check"></i><span>Secure Payments</span></div>
+        <div class="trust-pill"><i class="bi bi-arrow-repeat"></i><span>Easy Returns</span></div>
+        <div class="trust-pill"><i class="bi bi-truck"></i><span>Fast Delivery</span></div>
+      </div>
 
-      const confirmOrderBtn = document.getElementById("confirmOrderBtn");
-      confirmOrderBtn.disabled = true;
-      confirmOrderBtn.textContent = "Placing Order...";
+      <div class="cart-footer-bottom">
+        <p>© 2026 NeoStore. All rights reserved.</p>
+        <div class="payment-badges" aria-label="Accepted payments">
+          <span>Visa</span>
+          <span>MasterCard</span>
+          <span>UPI</span>
+        </div>
+      </div>
+    </div>
+  </footer>
 
-      try {
-        const response = await fetch(`${API_BASE}/api/orders`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            items: cart,
-            deliveryAddress,
-            paymentMethod: selectedPaymentMethod(),
-          }),
-        });
+  <div class="mobile-checkout-bar d-md-none d-none" id="mobileCheckoutBar">
+    <div>
+      <strong id="mobileCheckoutTotal">₹0</strong>
+      <small id="mobileCheckoutCount">0 items</small>
+    </div>
+    <button id="mobileCheckoutBtn" class="btn btn-primary ripple-host" type="button">
+      <span class="btn-copy">Checkout</span>
+      <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+    </button>
+  </div>
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Unable to place order.");
-        }
-
-        alert("🎉 Order placed successfully! Thank you for shopping with NeoStore!");
-        localStorage.removeItem("cart");
-        window.location.href = "index.html";
-      } catch (error) {
-        alert(error.message);
-      } finally {
-        confirmOrderBtn.disabled = false;
-        confirmOrderBtn.textContent = "✅ Confirm Order";
-      }
-    }
-
-    renderCart();
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="cart.js"></script>
 </body>
 </html>

@@ -181,6 +181,8 @@ function renderProducts(products) {
           name: product.name,
           price: product.price,
           image: imageUrl,
+          description: product.description || "",
+          category: product.category || "General",
           quantity: 1
         });
       });

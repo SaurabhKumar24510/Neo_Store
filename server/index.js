@@ -12,7 +12,11 @@ const app = express();
 const clientPath = path.resolve(__dirname, '../Client');
 
 // ✅ Middlewares
-app.use(cors());
+app.use(cors({
+  origin: true,
+  methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -20,10 +24,13 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // ✅ Serve frontend static files (after API routes)
 app.use(express.static(clientPath));
@@ -45,4 +52,8 @@ app.get("/my-orders", (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running at: http://localhost:${PORT}`);
+  console.log("🔐 Razorpay config:", {
+    keyIdLoaded: Boolean(process.env.RAZORPAY_KEY_ID),
+    keySecretLoaded: Boolean(process.env.RAZORPAY_KEY_SECRET),
+  });
 });

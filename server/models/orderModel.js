@@ -80,13 +80,35 @@ const orderSchema = new mongoose.Schema({
   },
   deliveryAddress: {
     fullName: { type: String, required: true },
+    phoneNumber: { type: String, default: "" },
     address: { type: String, required: true },
     city: { type: String, required: true },
+    state: { type: String, default: "" },
     pincode: { type: String, required: true },
   },
   items: {
     type: [orderItemSchema],
     default: [],
+  },
+  checkoutGroupId: {
+    type: String,
+    default: "",
+    index: true,
+  },
+  subtotalAmount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  discountAmount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  deliveryFee: {
+    type: Number,
+    default: 0,
+    min: 0,
   },
   totalAmount: {
     type: Number,
@@ -109,6 +131,36 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     default: "Cash on Delivery",
+  },
+  paymentGateway: {
+    type: String,
+    enum: ["cod", "razorpay"],
+    default: "cod",
+  },
+  paymentStatus: {
+    type: String,
+    enum: ["pending_cod", "created", "paid", "failed", "refunded"],
+    default: "pending_cod",
+  },
+  gatewayOrderId: {
+    type: String,
+    default: "",
+  },
+  gatewayPaymentId: {
+    type: String,
+    default: "",
+  },
+  gatewaySignature: {
+    type: String,
+    default: "",
+  },
+  paymentFailureReason: {
+    type: String,
+    default: "",
+  },
+  paidAt: {
+    type: Date,
+    default: null,
   },
   deliveryPartner: {
     type: String,

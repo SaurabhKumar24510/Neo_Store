@@ -10,8 +10,10 @@ const timelineSteps = ["pending", "processing", "shipped", "out_for_delivery", "
 function sanitizeDeliveryAddress(address) {
   return {
     fullName: address.fullName?.trim(),
+    phoneNumber: address.phoneNumber?.trim(),
     address: address.address?.trim(),
     city: address.city?.trim(),
+    state: address.state?.trim(),
     pincode: address.pincode?.trim(),
   };
 }
@@ -136,7 +138,14 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ message: "Your cart is empty." });
     }
 
-    if (!deliveryAddress.fullName || !deliveryAddress.address || !deliveryAddress.city || !deliveryAddress.pincode) {
+    if (
+      !deliveryAddress.fullName ||
+      !deliveryAddress.phoneNumber ||
+      !deliveryAddress.address ||
+      !deliveryAddress.city ||
+      !deliveryAddress.state ||
+      !deliveryAddress.pincode
+    ) {
       return res.status(400).json({ message: "Delivery address is required." });
     }
 
@@ -186,7 +195,12 @@ exports.placeOrder = async (req, res) => {
       customerEmail: user.email,
       deliveryAddress,
       paymentMethod,
+      paymentGateway: "cod",
+      paymentStatus: "pending_cod",
       items,
+      subtotalAmount: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      discountAmount: 0,
+      deliveryFee: 0,
       totalAmount: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
       status: "pending",
       statusTimeline: {
